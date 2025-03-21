@@ -27,9 +27,13 @@ export function generateBooks({
 
   for (let i = 0; i < count; i++) {
     const index = baseIndex + i + 1;
+    const coreRng = seedrandom(`${seed}-book-${index}`);
+    const extraRng = seedrandom(`${seed}-extra-${index}`);
+
+    faker.seed(index + parseInt(seed));
 
     const titles = bookTitles[region] || bookTitles["en"];
-    const title = titles[Math.floor(rng() * titles.length)];
+    const title = titles[Math.floor(coreRng() * titles.length)];
 
     const author = `${faker.person.firstName()} ${faker.person.lastName()}`;
     const publisher = faker.company.name();
@@ -37,16 +41,18 @@ export function generateBooks({
       .int({ min: 1000000000000, max: 9999999999999 })
       .toString();
 
-    const likes = Math.round(avgLikes + rng() * 2);
+    const likes = Math.round(avgLikes + extraRng() * 2);
 
     const reviewCount =
-      rng() < avgReviews - Math.floor(avgReviews)
+      extraRng() < avgReviews - Math.floor(avgReviews)
         ? Math.ceil(avgReviews)
         : Math.floor(avgReviews);
     const reviews = Array.from({ length: reviewCount }, () => ({
       author: `${faker.person.firstName()} ${faker.person.lastName()}`,
       text: (reviewTexts[region] || reviewTexts["en"])[
-        Math.floor(rng() * (reviewTexts[region] || reviewTexts["en"]).length)
+        Math.floor(
+          extraRng() * (reviewTexts[region] || reviewTexts["en"]).length
+        )
       ],
     }));
 
