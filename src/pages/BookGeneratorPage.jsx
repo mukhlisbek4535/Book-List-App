@@ -40,6 +40,14 @@ const BookGeneratorPage = () => {
   }, [seed, region, avgLikes, avgReviews, currentPage]);
 
   useEffect(() => {
+    // Whenever seed, region, avgLikes, or avgReviews changes,
+    // reset the page and regenerate fresh data
+    setBooks([]);
+    setCurrentPage(1);
+    setHasMore(true);
+  }, [seed, region, avgLikes, avgReviews]);
+
+  useEffect(() => {
     loadBooks();
   }, [loadBooks]);
 
